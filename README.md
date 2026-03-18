@@ -1,7 +1,5 @@
 # writing-skills
 
-A mono-repo of Claude Code writing skills powered by the [Humanizer](https://github.com/blader/humanizer) two-pass AI-pattern removal flow.
-
 ---
 
 ## What's in here
