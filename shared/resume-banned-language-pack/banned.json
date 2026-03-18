@@ -1,0 +1,223 @@
+{
+  "schema_version": "1.0.0",
+  "description": "Banned phrases for resume, cover letter, and LinkedIn content. Each entry includes replacement templates that require metrics or concrete actions.",
+  "function_spec": {
+    "name": "flag_banned_phrases",
+    "signature": "flag_banned_phrases(text: str) -> list[dict]",
+    "returns": [
+      {
+        "field": "phrase",
+        "type": "str",
+        "description": "The exact matched text from the input"
+      },
+      {
+        "field": "start",
+        "type": "int",
+        "description": "Character offset (inclusive)"
+      },
+      {
+        "field": "end",
+        "type": "int",
+        "description": "Character offset (exclusive)"
+      },
+      {
+        "field": "suggestion",
+        "type": "str",
+        "description": "Replacement template. Placeholders: {N} = number, {%} = percentage, {$} = dollar amount, {VERB} = action verb, {OUTCOME} = concrete result"
+      },
+      {
+        "field": "requires_metric",
+        "type": "bool",
+        "description": "If true, the replacement MUST include a number or measurable outcome"
+      },
+      {
+        "field": "severity",
+        "type": "string",
+        "enum": ["error", "warning"],
+        "description": "error = always remove; warning = context-dependent"
+      }
+    ]
+  },
+  "banned_phrases": [
+    {
+      "id": "RBL-001",
+      "phrase": "results-driven",
+      "match_type": "exact",
+      "severity": "error",
+      "requires_metric": true,
+      "suggestion": "Remove. Prove it with results: '{VERB} {OUTCOME}, achieving {N}% {metric}.'",
+      "humanizer_patterns": [1, 4]
+    },
+    {
+      "id": "RBL-002",
+      "phrase": "team player",
+      "match_type": "exact",
+      "severity": "error",
+      "requires_metric": false,
+      "suggestion": "Remove. Name the team and what you shipped together: 'Collaborated with {N}-person team to deliver {OUTCOME}.'",
+      "humanizer_patterns": [4, 7]
+    },
+    {
+      "id": "RBL-003",
+      "phrase": "passionate about",
+      "match_type": "phrase",
+      "severity": "error",
+      "requires_metric": false,
+      "suggestion": "Remove. Show the passion with a concrete action: '{VERB} {OUTCOME} in {domain}.'",
+      "humanizer_patterns": [4, 7]
+    },
+    {
+      "id": "RBL-004",
+      "phrase": "detail-oriented",
+      "match_type": "exact",
+      "severity": "error",
+      "requires_metric": true,
+      "suggestion": "Remove. Prove it: 'Caught {N} production bugs in code review that prevented {OUTCOME}.'",
+      "humanizer_patterns": [4]
+    },
+    {
+      "id": "RBL-005",
+      "phrase": "strong communication skills",
+      "match_type": "phrase",
+      "severity": "error",
+      "requires_metric": false,
+      "suggestion": "Remove. Cite a concrete artifact: 'Wrote {OUTCOME} adopted by {N} teams.' or 'Presented {topic} to {N}-person exec audience.'",
+      "humanizer_patterns": [4, 7]
+    },
+    {
+      "id": "RBL-006",
+      "phrase": "proven track record",
+      "match_type": "phrase",
+      "severity": "error",
+      "requires_metric": true,
+      "suggestion": "Remove. List the track: '{VERB} {N} {outcomes} over {time}, averaging {%} improvement.'",
+      "humanizer_patterns": [1, 4]
+    },
+    {
+      "id": "RBL-007",
+      "phrase": "go-getter",
+      "match_type": "exact",
+      "severity": "error",
+      "requires_metric": false,
+      "suggestion": "Remove entirely. Use a bullet that shows initiative: 'Identified and fixed {OUTCOME} without being asked, saving {N} hours/week.'",
+      "humanizer_patterns": [4]
+    },
+    {
+      "id": "RBL-008",
+      "phrase": "self-starter",
+      "match_type": "exact",
+      "severity": "error",
+      "requires_metric": false,
+      "suggestion": "Remove. Show it: 'Independently scoped and shipped {OUTCOME} in {N} weeks.'",
+      "humanizer_patterns": [4]
+    },
+    {
+      "id": "RBL-009",
+      "phrase": "leveraged",
+      "match_type": "exact",
+      "severity": "error",
+      "requires_metric": false,
+      "suggestion": "Replace with a plain verb: 'Used', 'Built with', 'Deployed', or 'Applied {technology} to {OUTCOME}.'",
+      "humanizer_patterns": [7]
+    },
+    {
+      "id": "RBL-010",
+      "phrase": "synergized",
+      "match_type": "exact",
+      "severity": "error",
+      "requires_metric": false,
+      "suggestion": "Delete. Write what actually happened: 'Partnered with {team} to {OUTCOME}.'",
+      "humanizer_patterns": [7]
+    },
+    {
+      "id": "RBL-011",
+      "phrase": "spearheaded",
+      "match_type": "exact",
+      "severity": "warning",
+      "requires_metric": true,
+      "suggestion": "Replace with 'Led' or 'Owned', and add scope: 'Led {N}-person team to {OUTCOME} in {N} months.'",
+      "humanizer_patterns": [7]
+    },
+    {
+      "id": "RBL-012",
+      "phrase": "streamlined",
+      "match_type": "exact",
+      "severity": "warning",
+      "requires_metric": true,
+      "suggestion": "Keep only if followed by a measurable result: 'Streamlined {process}, cutting {N} hours/week.'",
+      "humanizer_patterns": [7]
+    },
+    {
+      "id": "RBL-013",
+      "phrase": "thought leader",
+      "match_type": "phrase",
+      "severity": "error",
+      "requires_metric": false,
+      "suggestion": "Remove. Cite output: 'Published {N} technical posts read by {N}+ engineers.' or 'Keynoted {conference}, {N} attendees.'",
+      "humanizer_patterns": [1, 4]
+    },
+    {
+      "id": "RBL-014",
+      "phrase": "value-add",
+      "match_type": "phrase",
+      "severity": "error",
+      "requires_metric": true,
+      "suggestion": "Delete. Quantify the value: '{VERB} {OUTCOME}, generating ${N} in savings / {N}% efficiency gain.'",
+      "humanizer_patterns": [1, 7]
+    },
+    {
+      "id": "RBL-015",
+      "phrase": "responsible for",
+      "match_type": "phrase",
+      "severity": "error",
+      "requires_metric": false,
+      "suggestion": "Start with an action verb: 'Owned', 'Led', 'Built', 'Maintained', 'Reduced'. Never 'Responsible for'.",
+      "humanizer_patterns": [8]
+    },
+    {
+      "id": "RBL-016",
+      "phrase": "assisted with",
+      "match_type": "phrase",
+      "severity": "error",
+      "requires_metric": false,
+      "suggestion": "Claim your contribution clearly: 'Built the {component} that enabled {team} to {OUTCOME}.'",
+      "humanizer_patterns": [8]
+    },
+    {
+      "id": "RBL-017",
+      "phrase": "helped to",
+      "match_type": "phrase",
+      "severity": "warning",
+      "requires_metric": false,
+      "suggestion": "Specify your role: 'Designed the {system}', 'Wrote the {artifact}', 'Owned the {process}.'",
+      "humanizer_patterns": [8]
+    },
+    {
+      "id": "RBL-018",
+      "phrase": "dynamic",
+      "match_type": "exact",
+      "severity": "warning",
+      "requires_metric": false,
+      "suggestion": "Remove if used as a filler adjective. Replace with a specific trait backed by evidence.",
+      "humanizer_patterns": [4, 7]
+    },
+    {
+      "id": "RBL-019",
+      "phrase": "innovative",
+      "match_type": "exact",
+      "severity": "warning",
+      "requires_metric": false,
+      "suggestion": "Remove unless followed by a specific, novel approach: describe WHAT was new and WHY it hadn't been done before.",
+      "humanizer_patterns": [4, 7]
+    },
+    {
+      "id": "RBL-020",
+      "phrase": "extensive experience",
+      "match_type": "phrase",
+      "severity": "error",
+      "requires_metric": true,
+      "suggestion": "Replace with a number: '{N} years of {domain} experience' or cite specific depth with examples.",
+      "humanizer_patterns": [1, 5]
+    }
+  ]
+}

@@ -1,0 +1,236 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "name": "nick-mode-writing-standard",
+  "version": "1.0.0",
+  "description": "Machine-readable writing standard for Nicholas Hidalgo. Enforces direct, factual, voice-forward prose. Based on Humanizer patterns with additional profile-specific rules.",
+  "profiles": {
+    "default": {
+      "description": "Applies to all contexts unless overridden by a sub-profile."
+    },
+    "resume": {
+      "description": "Resume bullets, cover letters, LinkedIn. Strictest mode: all bans enforced, metrics required.",
+      "extends": "default",
+      "extra_rules": ["require_metric_or_outcome"]
+    },
+    "email": {
+      "description": "Professional email. Bans sycophancy and filler; allows first-person and contractions.",
+      "extends": "default"
+    },
+    "technical": {
+      "description": "Docs, incident summaries, requirements. Bans promotional language; allows copula freely.",
+      "extends": "default",
+      "relaxed_rules": ["require_metric_or_outcome"]
+    }
+  },
+  "rules": [
+    {
+      "id": "NICK-001",
+      "name": "ban_em_dash",
+      "humanizer_pattern_id": 13,
+      "severity": "error",
+      "description": "Em dashes (—) are forbidden. Use a comma, period, or semicolon.",
+      "match": {
+        "type": "regex",
+        "pattern": "\\u2014"
+      },
+      "suggestion": "Replace — with a comma, semicolon, or rewrite the sentence.",
+      "example_violation": "The result—a 40% latency drop—justified the refactor.",
+      "example_fix": "The result was a 40% latency drop, which justified the refactor."
+    },
+    {
+      "id": "NICK-002",
+      "name": "ban_emojis_in_professional_text",
+      "humanizer_pattern_id": 17,
+      "severity": "error",
+      "profiles": ["default", "resume", "email", "technical"],
+      "description": "Emojis are forbidden in headings and bullet points.",
+      "match": {
+        "type": "regex",
+        "pattern": "[\\u{1F300}-\\u{1FFFF}\\u2600-\\u27BF]",
+        "context": "heading_or_bullet"
+      },
+      "suggestion": "Remove the emoji. Let the words do the work.",
+      "example_violation": "🚀 Launched new checkout flow in Q3.",
+      "example_fix": "Launched new checkout flow in Q3."
+    },
+    {
+      "id": "NICK-003",
+      "name": "prefer_copula",
+      "humanizer_pattern_id": 8,
+      "severity": "warning",
+      "description": "Prefer simple 'is/are/has' over elaborate stand-ins.",
+      "match": {
+        "type": "regex",
+        "pattern": "\\b(serves? as (a|an|the)|stands? as (a|an|the)|represents? (a|an|the)|boasts? (a|an|the)|functions? as (a|an|the))\\b",
+        "flags": "i"
+      },
+      "suggestion": "Replace with 'is', 'are', or 'has'.",
+      "example_violation": "The tool serves as a unified platform for all workflows.",
+      "example_fix": "The tool is a unified platform for all workflows."
+    },
+    {
+      "id": "NICK-004",
+      "name": "ban_ai_vocabulary",
+      "humanizer_pattern_id": 7,
+      "severity": "error",
+      "description": "High-frequency AI vocabulary words are prohibited.",
+      "match": {
+        "type": "lexical_list",
+        "words": [
+          "delve", "tapestry", "underscore", "underscores", "underscored",
+          "pivotal", "testament", "enduring", "fostering", "garner", "garnered",
+          "interplay", "intricate", "intricacies", "showcase", "showcases",
+          "showcasing", "vibrant", "landscape", "crucial", "vital", "paramount",
+          "leverage", "leveraging", "synergy", "synergistic", "robust",
+          "cutting-edge", "next-generation", "transformative", "revolutionary",
+          "groundbreaking", "innovative solution", "best-in-class", "world-class"
+        ],
+        "threshold": 1
+      },
+      "suggestion": "Use a plain, specific word. Say what you mean directly.",
+      "example_violation": "I delve into the intricate interplay of systems.",
+      "example_fix": "I analyze how the systems interact."
+    },
+    {
+      "id": "NICK-005",
+      "name": "ban_sycophantic_openers",
+      "humanizer_pattern_id": 21,
+      "severity": "error",
+      "description": "Sycophantic openers and servile phrases are forbidden.",
+      "match": {
+        "type": "regex",
+        "pattern": "\\b(great question|excellent point|you('re| are) absolutely right|of course!|certainly!|i hope this helps|let me know if you('d| would) like)\\b",
+        "flags": "i"
+      },
+      "suggestion": "Delete the opener. Start with the actual content.",
+      "example_violation": "Great question! Here's an overview of the topic.",
+      "example_fix": "The French Revolution began with fiscal crisis and food shortages in 1789."
+    },
+    {
+      "id": "NICK-006",
+      "name": "ban_weasel_words",
+      "humanizer_pattern_id": 5,
+      "severity": "warning",
+      "description": "Vague attributions without citations are prohibited.",
+      "match": {
+        "type": "regex",
+        "pattern": "\\b(experts? (say|argue|believe|suggest|note)|industry (reports?|observers?)|some (critics?|sources?)|observers? have (noted|cited)|it is (widely|generally) (believed|accepted|acknowledged))\\b",
+        "flags": "i"
+      },
+      "suggestion": "Name the source or remove the claim. Cite specifically or don't cite.",
+      "example_violation": "Experts believe the approach reduces latency.",
+      "example_fix": "A 2023 AWS benchmark showed a 38% latency reduction using this approach."
+    },
+    {
+      "id": "NICK-007",
+      "name": "ban_promotional_adjectives",
+      "humanizer_pattern_id": 4,
+      "severity": "error",
+      "profiles_strict": ["resume"],
+      "description": "Promotional adjectives without evidence are forbidden.",
+      "match": {
+        "type": "lexical_list",
+        "words": [
+          "breathtaking", "stunning", "renowned", "nestled", "boasts",
+          "must-visit", "vibrant", "rich cultural heritage", "profound impact",
+          "natural beauty", "in the heart of"
+        ],
+        "threshold": 1
+      },
+      "suggestion": "Replace with a specific, verifiable claim.",
+      "example_violation": "Drove profound impact across the organization.",
+      "example_fix": "Reduced onboarding time by 3 weeks across 4 teams."
+    },
+    {
+      "id": "NICK-008",
+      "name": "ban_filler_phrases",
+      "humanizer_pattern_id": 22,
+      "severity": "warning",
+      "description": "Common filler phrases inflate word count without adding meaning.",
+      "match": {
+        "type": "phrase_list",
+        "phrases": [
+          "in order to",
+          "due to the fact that",
+          "at this point in time",
+          "in the event that",
+          "has the ability to",
+          "it is important to note that",
+          "it should be noted that",
+          "needless to say",
+          "as a matter of fact",
+          "for all intents and purposes",
+          "at the end of the day"
+        ]
+      },
+      "suggestion": "Compress to the simplest equivalent. 'In order to' → 'To'.",
+      "example_violation": "In order to achieve this, it is important to note that planning is essential.",
+      "example_fix": "To achieve this, plan carefully."
+    },
+    {
+      "id": "NICK-009",
+      "name": "ban_excessive_hedging",
+      "humanizer_pattern_id": 23,
+      "severity": "warning",
+      "description": "Three or more stacked hedge words in a single clause is a violation.",
+      "match": {
+        "type": "stacking_count",
+        "words": ["could", "might", "may", "possibly", "potentially", "arguably", "perhaps", "seemingly"],
+        "threshold": 3,
+        "window_chars": 100
+      },
+      "suggestion": "Pick one hedge if needed. 'May affect outcomes.' not 'could potentially possibly affect.'",
+      "example_violation": "It could potentially possibly be argued the policy might affect outcomes.",
+      "example_fix": "The policy may affect outcomes."
+    },
+    {
+      "id": "NICK-010",
+      "name": "ban_generic_conclusions",
+      "humanizer_pattern_id": 24,
+      "severity": "error",
+      "description": "Vague positive closing statements are forbidden.",
+      "match": {
+        "type": "regex",
+        "pattern": "\\b(the future (looks|is) bright|exciting times (lie|are) ahead|continue(s)? (this|our|the) journey (toward|towards)|a (major|significant) step (forward|in the right direction)|the possibilities are endless|sky.?s the limit)\\b",
+        "flags": "i"
+      },
+      "suggestion": "End with a concrete next action, metric, or factual statement.",
+      "example_violation": "The future looks bright as we continue this journey toward excellence.",
+      "example_fix": "The company plans to open two locations and hire 40 engineers next year."
+    },
+    {
+      "id": "NICK-011",
+      "name": "ban_knowledge_cutoff_disclaimers",
+      "humanizer_pattern_id": 20,
+      "severity": "error",
+      "description": "AI knowledge-cutoff language must be removed before publishing.",
+      "match": {
+        "type": "regex",
+        "pattern": "\\b(as of my (last )?(training|knowledge|update)|up to my (last )?training|based on available information|while specific details (are|remain) (limited|scarce|not extensively documented)|it (appears|seems) to have been)\\b",
+        "flags": "i"
+      },
+      "suggestion": "Replace with a sourced fact or remove the sentence entirely.",
+      "example_violation": "While specific details are limited based on available information, the company appears to have been founded in the 1990s.",
+      "example_fix": "The company was founded in 1994, per its SEC filing."
+    },
+    {
+      "id": "NICK-012",
+      "name": "require_metric_or_outcome",
+      "severity": "error",
+      "profiles": ["resume"],
+      "description": "Resume bullets must contain at least one metric, outcome, or concrete deliverable.",
+      "match": {
+        "type": "absence_check",
+        "require_one_of": [
+          "\\b\\d+[%x]\\b",
+          "\\b\\$[\\d,.]+[KMB]?\\b",
+          "\\b\\d+\\s*(users?|customers?|teams?|engineers?|clients?|tickets?|issues?|PRs?|repos?|weeks?|days?|hours?|months?)\\b",
+          "\\breduced|increased|improved|cut|saved|shipped|launched|built|designed|led|drove|owned\\b"
+        ]
+      },
+      "suggestion": "Add a number, percentage, dollar figure, or concrete outcome to this bullet.",
+      "example_violation": "Improved the onboarding experience for new engineers.",
+      "example_fix": "Cut new-engineer ramp time from 6 weeks to 3 weeks by rewriting the onboarding runbook."
+    }
+  ]
+}
