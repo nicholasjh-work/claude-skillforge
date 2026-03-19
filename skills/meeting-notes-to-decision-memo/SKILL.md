@@ -68,7 +68,6 @@ seed: "MEMO_SEED_001"
 - **Open question:** Does support need additional training before full rollout?
 
 ### Long
-See `examples/long.json`.
 
 ## Unit Tests
 

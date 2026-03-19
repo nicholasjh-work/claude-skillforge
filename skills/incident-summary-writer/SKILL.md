@@ -68,7 +68,6 @@ seed: "INCIDENT_SEED_001"
 **After:** "Root cause: a load balancer config pushed at 11 PM set the health check timeout to 1ms instead of 500ms. Every backend instance failed health checks and was removed from the pool."
 
 ### Long (full report)
-See `examples/long.json`.
 
 ## Unit Tests
 

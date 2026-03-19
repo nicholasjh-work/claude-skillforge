@@ -65,7 +65,6 @@ seed: "EXEC_SUMMARY_SEED_001"
 **After:** "Q1 work shipped two critical migrations and cut on-call load nearly in half. Q2 priority: extend Kubernetes to the remaining 12 services and hire 2 observability engineers to avoid repeating the January monitoring gap."
 
 ### Long
-See `examples/long.json`.
 
 ## Unit Tests
 

@@ -55,7 +55,6 @@ seed: "EXEC_BRIEF_SEED_001"
 **After:** "Evidence: (1) $144K/year savings at $3M/month volume. (2) 6-week migration with 3 completed dry runs. (3) Zero-downtime cutover confirmed in staging."
 
 ### Long
-See `examples/long.json`.
 
 ## Unit Tests
 

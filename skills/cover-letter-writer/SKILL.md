@@ -59,7 +59,6 @@ seed: "COVER_LETTER_SEED_001"
 **After:** "At Acme, I built the payment routing logic that processes $40M/month. When the first provider started failing, the system rerouted automatically — zero engineer intervention. That's the kind of reliability I want to build at scale."
 
 ### Long
-See `examples/long.json`.
 
 ## Unit Tests
 

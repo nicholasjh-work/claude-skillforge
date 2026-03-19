@@ -64,7 +64,6 @@ seed: "LINKEDIN_SEED_001"
 **After:** "Hi — I saw the staff eng posting. I've spent 3 years building out platform tooling (CI, feature flags, deploy automation) at Series B and Series C companies. Happy to send a resume if it looks like a fit."
 
 ### Long — referral ask
-See `examples/long.json`.
 
 ## Unit Tests
 
