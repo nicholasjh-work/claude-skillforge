@@ -6,6 +6,12 @@ Set MOCK_SCRUBBER=1 to run without the real ai_pattern_scrubber implementation.
 The mock returns deterministic fixture-based hits for known test inputs.
 """
 
+import sys
+from pathlib import Path
+
+# Add repo root to sys.path so shared.* and ai_pattern_scrubber are importable.
+sys.path.insert(0, str(Path(__file__).parent.parent))
+
 import os
 import pytest
 from unittest.mock import patch, MagicMock
