@@ -1,5 +1,5 @@
 ---
-name: schema-join-risk-reviewer
+name: sql-join-risk-reviewer
 description: Review SQL or report logic for many-to-many joins, duplicate-grain risk, unsafe aggregation, and filter side effects.
 version: "1.0.0"
 ---

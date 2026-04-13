@@ -1,5 +1,5 @@
 ---
-name: sql-report-builder
+name: sql-report-query-builder
 description: Build report-safe SQL from business requests with grain control, join discipline, filter logic, and validation notes.
 version: "1.0.0"
 ---

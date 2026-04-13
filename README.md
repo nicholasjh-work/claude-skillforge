@@ -1,320 +1,148 @@
-# writing-skills
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="assets/nh-logo-dark.svg" width="120">
+  <source media="(prefers-color-scheme: light)" srcset="assets/nh-logo-light.svg" width="120">
+  <img alt="Hidalgo Systems Labs" src="assets/nh-logo-light.svg" width="120">
+</picture>
 
-A mono-repository of Claude writing skills, shared detectors, and supporting
-tooling. Every skill transforms AI-drafted or human prose into clean,
-credible writing by detecting and removing the patterns that make text sound
-machine-generated.
+<h1 align="center">Claude Skillforge</h1>
+<p align="center"><b>Production-ready Claude Skills you can install and use. Not a list. A library.</b></p>
 
-**Scholar Editor** is the flagship skill: a research-grounded editorial
-pipeline covering 38 documented AI writing patterns, grounded in peer-reviewed
-detection research from Princeton, Stanford, MIT, Maryland, and Cell Press.
-
----
-
-## How Skills Work
-
-Each skill is a `SKILL.md` file that Claude reads before responding to your
-request. Claude loads the skill automatically when your message matches the
-skill's trigger phrases -- no slash commands or manual activation required.
-
-Skills in this repo come in two surfaces:
-
-| Surface | How to install | How it triggers |
-|---|---|---|
-| Claude.ai / Claude app | Upload `.skill` file via Settings > Customize > Skills | Automatic, based on what you say |
-| Claude Code | Place skill folder in `.claude/skills/` | Automatic, or via `/skill-name` |
+<p align="center">
+  <a href="https://github.com/nicholasjh-work/claude-skillforge/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue?style=for-the-badge" alt="License"></a>
+  <a href="https://github.com/nicholasjh-work/claude-skillforge/stargazers"><img src="https://img.shields.io/github/stars/nicholasjh-work/claude-skillforge?style=for-the-badge" alt="Stars"></a>
+  <a href="https://github.com/nicholasjh-work/claude-skillforge/issues"><img src="https://img.shields.io/github/issues/nicholasjh-work/claude-skillforge?style=for-the-badge" alt="Issues"></a>
+</p>
 
 ---
 
-## Quick Start
+### What is this?
 
-### Claude.ai
+Claude Skillforge is a library of 29 battle-tested Claude Skills built for enterprise analytics, data engineering, professional writing, and career tools. Every skill in this repo has been used in production workflows, not written as a demo.
 
-1. Go to **Settings > Customize > Skills > Upload**
-2. Upload any `.skill` file from the `dist/` directory
-3. Say something that matches the skill's trigger phrases (see table below)
+Skills are instruction files that teach Claude how to perform specific tasks in a repeatable, high-quality way. They load on demand and cost roughly 100 tokens until activated.
 
-### Claude Code
+---
 
+### What are Claude Skills?
+
+Claude Skills are specialized instruction folders that Claude dynamically discovers and loads when relevant to a task. Each skill contains a `SKILL.md` file with YAML frontmatter (name and description for routing) and detailed execution instructions.
+
+Skills use progressive disclosure: Claude scans metadata first (~100 tokens), loads full instructions only when the skill matches (~2-5K tokens), and accesses bundled resources only as needed. Multiple skills can be active simultaneously without overwhelming the context window.
+
+---
+
+### How to install
+
+**Claude.ai (Web/Desktop)**
+1. Go to Settings > Capabilities > Skills
+2. Upload skill folders or point to this repository
+
+**Claude Code (CLI)**
 ```bash
-git clone https://github.com/nicholasjh-work/claude-writing-skillpack.git
-cp -r claude-writing-skillpack/skills/email-writer ~/.claude/skills/
+git clone https://github.com/nicholasjh-work/claude-skillforge.git
+# Copy desired skill folders into your project's .claude/skills/ directory
 ```
 
-Or install all skills at once:
-
-```bash
-cp -r claude-writing-skillpack/skills/* ~/.claude/skills/
-```
+**Manual**
+Copy any skill folder into your Claude skills directory. Each folder is self-contained.
 
 ---
 
-## Skill Inventory and Trigger Map
+### Skills
 
-Say any of these phrases and the matching skill activates automatically.
+#### Core (3 skills)
 
-### Editorial
+Foundational operating standards that govern how Claude behaves across all tasks.
 
-| Skill | Version | Say something like... |
-|---|---|---|
-| `scholar-editor` | 2.0.0 | "humanize this", "remove AI patterns", "this sounds like AI", "final pass", "clean up this text", "add personality to this", "editorial review" |
+| Skill | What it does |
+|---|---|
+| [claude-operator-standard](core/claude-operator-standard/) | Universal operating standard for Claude sessions. Governs communication style, troubleshooting method, output format, session behavior, and handoff protocol. |
+| [claude-code-standard](core/claude-code-standard/) | Technical execution standard for coding, SQL, Python, dbt, and data engineering. Covers stack preferences, documentation rules, testing, and analytics engineering guidance. |
+| [claude-session-handoff](core/claude-session-handoff/) | Generates a structured handoff block that captures full technical state so a conversation can continue in a new window with zero re-explanation. |
 
-### Resume and Career
+#### Data Engineering (8 skills)
 
-| Skill | Version | Say something like... |
-|---|---|---|
-| `resume-one-page` | 1.0.0 | "rewrite my resume for this job", "one page resume", "ATS score", "optimize my resume" + paste JD |
-| `resume-two-page` | 1.0.0 | "two page resume", "director resume", "VP resume", "senior manager resume" + paste JD |
-| `resume-writer` | 1.1.0 | "write my resume bullets", "turn these notes into resume bullets", "draft a resume section" -- no JD |
-| `resume-editor` | 1.1.0 | "fix my resume bullets", "clean up this bullet", "remove weak language" -- no JD |
-| `resume-bullet-rewriter` | 1.1.0 | "rewrite this bullet", "fix this one line", "this bullet is weak" |
-| `cover-letter-writer` | 1.0.0 | "write a cover letter", "cover letter for this role" |
+Tools for data quality, SQL, reporting, KPI governance, and analytics engineering.
 
-### Professional Writing
+| Skill | What it does |
+|---|---|
+| [data-defect-investigator](data-engineering/data-defect-investigator/) | Investigates data defects, mismatches, duplicates, null issues, broken joins, and reconciliation failures. |
+| [data-file-profiler](data-engineering/data-file-profiler/) | Profiles CSV/Excel files: schema inspection, duplicate detection, null analysis, outliers, and data mismatches. |
+| [dataset-reconciler](data-engineering/dataset-reconciler/) | Compares two datasets and explains count, amount, and field-level differences. Source vs target, old vs new, ERP vs DW. |
+| [report-output-validator](data-engineering/report-output-validator/) | Validates report outputs, totals, grain, subtotals, and regression changes before release. |
+| [sql-join-risk-reviewer](data-engineering/sql-join-risk-reviewer/) | Reviews schemas, joins, and SQL logic for grain violations, duplicate risk, orphan rows, and aggregation errors. |
+| [sql-report-query-builder](data-engineering/sql-report-query-builder/) | Builds production-grade SQL for reporting. Translates business requests into safe, auditable query logic. |
+| [kpi-definition-standard](data-engineering/kpi-definition-standard/) | Defines KPIs with precise formulas, grain, source logic, exclusions, and governance notes. |
+| [report-requirements-translator](data-engineering/report-requirements-translator/) | Converts messy business requests into clean report or dashboard specifications. |
 
-| Skill | Version | Say something like... |
-|---|---|---|
-| `email-writer` | 1.0.0 | "write this email", "draft a professional email", "clean up this email" |
-| `correction-email-writer` | 1.0.0 | "write a correction email", "I need to apologize for", "I made a mistake in my last email" |
-| `linkedin-message-writer` | 1.0.0 | "write a LinkedIn message", "outreach to a recruiter", "follow up on LinkedIn" |
-| `stakeholder-update-writer` | 1.0.0 | "write a stakeholder update", "project status update", "executive status" |
-| `meeting-notes-to-decision-memo` | 1.0.0 | "turn these meeting notes into a memo", "decision memo from my notes" |
+#### Writing (13 skills)
 
-### Leadership and Executive
+Professional and editorial writing tools for business communication, technical documentation, and AI prose cleanup.
 
-| Skill | Version | Say something like... |
-|---|---|---|
-| `executive-brief-writer` | 1.0.0 | "write an executive brief", "one-page brief", "exec brief from this content" |
-| `executive-summary-writer` | 1.0.0 | "write an executive summary", "summarize this for leadership", "distill this report" |
-| `incident-summary-writer` | 1.0.0 | "write an incident summary", "post-mortem from my notes", "summarize this outage" |
+| Skill | What it does |
+|---|---|
+| [business-email-drafter](writing/business-email-drafter/) | Drafts natural business emails that are direct, specific, and free of canned language. |
+| [correction-email-drafter](writing/correction-email-drafter/) | Writes correction, clarification, and reset emails that are precise, calm, and not defensive. |
+| [cover-letter-drafter](writing/cover-letter-drafter/) | Writes cover letters grounded in real experience and specific to the role. |
+| [linkedin-message-drafter](writing/linkedin-message-drafter/) | Writes concise LinkedIn messages for recruiters, hiring managers, and networking. |
+| [executive-brief-drafter](writing/executive-brief-drafter/) | Writes short executive briefs: issue, impact, risk, and next step. |
+| [technical-to-business-summarizer](writing/technical-to-business-summarizer/) | Translates technical findings into concise business-facing summaries for leadership. |
+| [stakeholder-status-update](writing/stakeholder-status-update/) | Writes concise stakeholder updates on project status, issues, risks, and next steps. |
+| [internal-technical-doc-writer](writing/internal-technical-doc-writer/) | Writes internal technical documents, SOPs, incident notes, and decision memos. |
+| [incident-root-cause-writer](writing/incident-root-cause-writer/) | Writes incident summaries separating facts, impact, root cause, and corrective action. |
+| [requirements-doc-drafter](writing/requirements-doc-drafter/) | Writes requirements documents with scope, logic, assumptions, dependencies, and acceptance criteria. |
+| [meeting-to-decision-memo](writing/meeting-to-decision-memo/) | Converts meeting notes into decision memos with outcomes, owners, and next actions. |
+| [ai-writing-pattern-remover](writing/ai-writing-pattern-remover/) | Detects and removes AI writing patterns based on Wikipedia's "Signs of AI writing" guide. |
+| [ai-prose-humanizer](writing/ai-prose-humanizer/) | Removes AI patterns and adds human voice to prose. Two modes: CLEAN for professional docs, VOICE for creative writing. |
 
-### Technical Documentation
+#### Career (6 skills)
 
-| Skill | Version | Say something like... |
-|---|---|---|
-| `technical-writer` | 1.0.0 | "write a README", "write a runbook", "document this API", "ADR for this decision" |
-| `requirements-doc-writer` | 1.0.0 | "write a requirements doc", "turn this brief into requirements", "PRD from these notes" |
-| `requirements-to-report-spec` | 1.0.0 | "turn this request into a report spec", "build a report spec from these requirements" |
+Resume optimization, salary negotiation, and job application tools.
 
-### Data and SQL
-
-| Skill | Version | Say something like... |
-|---|---|---|
-| `sql-report-builder` | 1.0.0 | "write this SQL report", "build a query for", "report-safe SQL for" |
-| `schema-join-risk-reviewer` | 1.0.0 | "review this SQL for join risks", "check this query for double counting" |
-| `data-integrity-investigator` | 1.0.0 | "investigate this data issue", "find missing records", "why don't these numbers match" |
-| `python-data-investigator` | 1.0.0 | "profile this data file", "find quality issues in this CSV", "inspect this extract" |
-| `python-report-validation` | 1.0.0 | "validate this report output", "check subtotals", "verify these numbers before release" |
-| `python-reconciliation-engine` | 1.0.0 | "reconcile these two datasets", "compare source vs target", "find the differences" |
-| `kpi-definition-governance` | 1.0.0 | "define this KPI", "write a metric definition", "KPI governance doc" |
-
----
-
-## Scholar Editor -- Flagship Skill
-
-Scholar Editor detects and removes 38 documented AI writing patterns across
-two modes. It is the most research-grounded skill in this repo.
-
-### Two Modes
-
-**CLEAN mode** -- for professional writing where facts must not change.
-- Hard fact-lock: any token in `preserve_facts[]` that is altered blocks output
-- Severity gating: HIGH severity issues require human review before Pass 3 runs
-- Structured JSON output: audit report, applied rules, changelog
-- Best for: emails, technical docs, reports, anything with named metrics or dates
-
-**VOICE mode** -- for writing that needs a human pulse.
-- No fact-lock: rewrites freely for rhythm and personality
-- Soul audit in Pass 2: asks "what still makes this obviously AI-generated?"
-- Injects personality: opinions, varied rhythm, first-person where appropriate
-- Best for: blog posts, essays, creative writing, LinkedIn posts
-
-**Auto-detection:** Claude infers the mode from context. If you provide
-`preserve_facts` and a technical domain, it runs CLEAN. Creative or casual
-domains without `preserve_facts` get VOICE. You can override: "run this in
-CLEAN mode" or "run this in VOICE mode."
-
-### Pattern Coverage
-
-38 patterns across three source layers:
-
-| Layer | Patterns | Source |
-|---|---|---|
-| Wikipedia (P1-P24) | Significance inflation, AI vocabulary, em dash overuse, sycophancy, filler, generic conclusions, and 18 more | Wikipedia:Signs_of_AI_writing (WikiProject AI Cleanup) |
-| Research-grounded (P25-P38) | Burstiness, transition imbalance, impersonal hedging, register uniformity, syntactic templates, positivity bias, nominalization, experiential specificity absence, and 6 more | Desaire et al. 2023, GPTZero/Princeton 2023, Hans et al. 2024, Georgiou et al. 2024, Kendro et al. 2025, Shaib et al. 2024, VERMILLION framework 2025, and others |
+| Skill | What it does |
+|---|---|
+| [resume-bullet-rewriter](career/resume-bullet-rewriter/) | Rewrites a single resume bullet to be metric-backed, action-verb-led, and free of banned phrases. |
+| [resume-bullet-editor](career/resume-bullet-editor/) | Edits existing resume bullets to remove banned language, add metrics, and strengthen impact. |
+| [resume-section-writer](career/resume-section-writer/) | Writes resume sections from raw notes, brain dumps, or bullet lists. |
+| [resume-one-page-optimizer](career/resume-one-page-optimizer/) | ATS-optimized one-page resume evaluator and rewriter. Scores, gaps, and full rewrite against a job description. |
+| [resume-two-page-optimizer](career/resume-two-page-optimizer/) | ATS-optimized two-page resume evaluator for senior/director/VP roles. |
+| [salary-negotiation-framework](career/salary-negotiation-framework/) | Data-driven salary and total compensation negotiation framework. Covers tech, finance, PE/VC, healthcare, and B2B. |
 
 ---
 
-## Shared Libraries
+### Design philosophy
 
-These are NOT standalone skills. They are reference libraries loaded by skills
-that need them. They live in `shared/` and are embedded into dependent skill
-packages at build time.
+These skills follow two layers of standards:
 
-| Library | What it provides | Used by |
-|---|---|---|
-| `nick-mode-writing-standard` | Voice rules, banned pattern list, 12 canonical rewrites, Python validator API | All writing skills (Pass 3) |
-| `resume-banned-language-pack` | 20 forbidden resume phrases with metric-backed replacements, Python flag API | All resume skills |
-| `ai-pattern-scrubber` | Fast 10-pattern pre-flight scan | Embedded in scholar-editor |
-| `humanizer-flow` | Original two-pass humanizer pipeline | Superseded by scholar-editor v2 |
+**Standards-backed rules** grounded in published engineering guidance (PEP 8, Twelve-Factor App, OWASP, dbt best practices, Microsoft Power BI documentation). See [docs/rationale-and-references.md](docs/rationale-and-references.md).
+
+**House operating conventions** that are intentional working preferences for AI-assisted engineering: lead with the answer, sparse comments, no AI-style clutter, fixed output structures. These are not claimed as universal standards. See [docs/adr/0001-ai-session-operating-standard.md](docs/adr/0001-ai-session-operating-standard.md).
 
 ---
 
-## Repository Structure
+### Documentation
 
-```
-claude-writing-skillpack/
-+-- skills/                      <- 26 Claude skills, one folder each
-|   +-- scholar-editor/
-|   |   +-- SKILL.md
-|   |   +-- references/
-|   |       +-- patterns-24.md
-|   |       +-- patterns-research.md
-|   |       +-- soul-injection.md
-|   |       +-- nick-mode-voice.md
-|   +-- email-writer/
-|   |   +-- SKILL.md
-|   +-- ...
-+-- shared/                      <- Shared detectors and rule libraries
-|   +-- nick-mode-writing-standard/
-|   +-- resume-banned-language-pack/
-|   +-- ai-pattern-scrubber/
-|   +-- scholar-editor/          <- Python package for CI and testing
-+-- tests/                       <- Unit tests and fixtures
-|   +-- shared/
-|   +-- test_email_writer.py
-|   +-- test_scholar_editor.py
-+-- tools/                       <- Linting and validation tools
-|   +-- skill_linter.py
-|   +-- check_pattern_coverage.py
-+-- evaluation/                  <- Human evaluation plan and rubrics
-|   +-- EVAL_PLAN.md
-+-- .github/
-|   +-- workflows/
-|       +-- ci.yml
-|       +-- skill-lint.yml
-+-- README.md
-+-- CONTRIBUTING.md
-+-- CHANGELOG.md
-```
+| Document | Purpose |
+|---|---|
+| [docs/rationale-and-references.md](docs/rationale-and-references.md) | Standards-backed justification for skill rules with source citations |
+| [docs/adr/0001-ai-session-operating-standard.md](docs/adr/0001-ai-session-operating-standard.md) | Architecture Decision Record explaining why these standards exist |
 
 ---
 
-## Testing
+### Contributing
 
-Run the full test suite:
-
-```bash
-pytest -v tests/
-```
-
-Run pattern coverage check:
-
-```bash
-python tools/check_pattern_coverage.py
-```
-
-Lint all SKILL.md files:
-
-```bash
-python tools/skill_linter.py skills/
-```
-
-The linter checks every SKILL.md for:
-- Single-line quoted description (not multi-line YAML block)
-- ASCII-only content (no em dashes, curly quotes, Unicode arrows)
-- Allowed frontmatter keys only
-- Body under 500 lines
-- No dangling file references
+Contributions welcome. See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
 ---
 
-## Research Sources
+### License
 
-Scholar Editor and the shared detectors are grounded in the following research.
-Full citations are in `skills/scholar-editor/references/patterns-research.md`.
-
-**Statistical detection**
-- Gehrmann, Strobelt, Rush (2019). GLTR. ACL. arXiv:1906.04043
-- Mitchell et al. (2023). DetectGPT. Stanford. ICML 2023
-- Hans et al. (2024). Binoculars. University of Maryland. ICML 2024
-- Bao et al. (2024). Fast-DetectGPT. ICLR 2024
-
-**Linguistic and stylometric analysis**
-- Desaire et al. (2023). >99% accuracy classifier. Cell Reports Physical Science
-- Georgiou et al. (2024). LASSO linguistic analysis. MDPI
-- Kendro, Maloney & Jarvis (2025). Lexical diversity. eScholarship/UC
-- Shaib et al. (2024). Syntactic template repetition. CR-POS metric
-- Tercon (2025). Linguistic survey. arXiv:2510.05136
-- Munoz-Ortiz et al. (2024). Positivity bias. PLOS ONE
-
-**Bias and detection limits**
-- Liang et al. (2023). GPT detector bias against non-native writers. Stanford. Patterns
-- Sadasivan et al. (2023). Detection impossibility result. University of Maryland
-
-**Industry methodology**
-- GPTZero / Tian (2023). Perplexity and burstiness. Princeton
-- Turnitin (2023/2024). AI Writing Detection Model Architecture whitepaper
-- Dathathri et al. (2024). SynthID. Google DeepMind. Nature
-- VERMILLION framework (ResearchLeap, 2025)
-- Originality.ai LinkedIn study (2025)
-
-**Practitioner sources**
-- Wikipedia:Signs_of_AI_writing (WikiProject AI Cleanup)
-- Willo (2025). Resume AI detection study
+MIT License. See [LICENSE](LICENSE) for details.
 
 ---
 
-## Human Evaluation
-
-See `evaluation/EVAL_PLAN.md` for the full methodology:
-
-- 3 raters x 50 examples per skill
-- 4-point rubric: accuracy, edit effort, rhetorical fit, naturalness
-- Acceptance thresholds: 100% fact preservation, avg edit effort <= 2,
-  avg naturalness >= 2.0
-
----
-
-## CI/CD
-
-Every push and pull request runs:
-
-- `skill-lint.yml` -- validates all 26 SKILL.md files (frontmatter, ASCII,
-  line count, description format, broken references)
-- `ci.yml` -- runs pytest, pattern coverage check, and schema validation
-
-A PR cannot merge if any SKILL.md fails lint or any test fails.
-
----
-
-## Contributing
-
-See **CONTRIBUTING.md** for the full guide. Short version:
-
-1. Fork the repo and create a feature branch
-2. Add your skill to `skills/your-skill-name/SKILL.md`
-3. Run `python tools/skill_linter.py skills/your-skill-name/SKILL.md`
-4. Add at least 3 test cases to `tests/`
-5. Open a PR -- CI must pass before review
-
-New skills must include:
-- Single-line quoted description with trigger phrases
-- `version: "1.0.0"` in the Runtime Configuration block
-- Hallucination controls (no fabricated metrics, dates, or employers)
-- At least one before/after example
-
----
-
-## License
-
-MIT License. Copyright (c) 2026 Nick Hidalgo.
-
-Each skill's `SKILL.md` carries an MIT license header. Shared libraries
-carry the same license. See `LICENSE` for full terms.
-
----
-
-**Version:** 1.0.0
-**Last updated:** March 2026
-**Maintainer:** Nick Hidalgo
+<p align="center">
+  <a href="https://www.linkedin.com/in/nicholashidalgo"><img src="https://img.shields.io/badge/LinkedIn-Nicholas_Hidalgo-blue?style=for-the-badge&logo=linkedin" alt="LinkedIn"></a>&nbsp;
+  <a href="https://nicholashidalgo.com"><img src="https://img.shields.io/badge/Website-nicholashidalgo.com-teal?style=for-the-badge" alt="Website"></a>&nbsp;
+  <a href="mailto:analytics@nicholashidalgo.com"><img src="https://img.shields.io/badge/Email-analytics@nicholashidalgo.com-red?style=for-the-badge" alt="Email"></a>
+</p>

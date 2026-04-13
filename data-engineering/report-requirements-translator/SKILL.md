@@ -1,5 +1,5 @@
 ---
-name: requirements-to-report-spec
+name: report-requirements-translator
 description: Convert messy business requests into a clean implementation-ready report specification with grain, measures, filters, assumptions, and open questions.
 version: "1.0.0"
 ---

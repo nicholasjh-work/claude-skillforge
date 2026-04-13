@@ -1,5 +1,5 @@
 ---
-name: kpi-definition-governance
+name: kpi-definition-standard
 description: Define KPIs with formula, grain, source, exclusions, ownership, cadence, caveats, and business interpretation notes.
 version: "1.0.0"
 ---

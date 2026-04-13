@@ -1,5 +1,5 @@
 ---
-name: scholar-editor
+name: ai-prose-humanizer
 version: "2.0.0"
 description: "Evidence-based editorial pipeline that detects and removes AI writing patterns using a research-grounded rubric, preserves author facts, and gates on high-severity issues."
 allowed-tools:

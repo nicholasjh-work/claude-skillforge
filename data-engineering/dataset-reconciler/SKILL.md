@@ -1,5 +1,5 @@
 ---
-name: python-reconciliation-engine
+name: dataset-reconciler
 description: Compare two datasets by key, isolate missing rows and field-level differences, and summarize reconciliation exceptions clearly.
 version: "1.0.0"
 ---

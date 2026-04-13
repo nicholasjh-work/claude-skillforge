@@ -1,5 +1,5 @@
 ---
-name: python-data-investigator
+name: data-file-profiler
 description: Use Python to profile exports, find data quality issues, inspect bad records, and summarize findings in plain language.
 version: "1.0.0"
 ---
